@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSA Practical Referencer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0 auto;
+            max-width: 900px;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        details {
+            background: #fff;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        summary {
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1.1em;
+        }
+
+        pre {
+            background: #272822;
+            color: #f8f8f2;
+            padding: 10px;
+            overflow-x: auto;
+            border-radius: 5px;
+        }
+
+        code {
+            font-family: Consolas, monospace;
+        }
+
+        .concept {
+            color: #555;
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>DSA Practicals</h1>
+
+    <details>
+        <summary>Practical 1: Linear & Binary Search</summary>
+        <p class="concept">Linear Search scans every element sequentially (O(n)) and works on any array[cite: 22].
+            Binary Search repeatedly halves the search space (O(log n)) by comparing the target with the midpoint,
+            requiring the array to be sorted[cite: 22].</p>
+        <pre><code>// Algorithms[cite: 22]
+// Linear: For i=0 to n-1: If arr[i] == key Return i. Return -1
+// Binary: low=0, high=n-1. While low <= high: mid=(low+high)/2. If arr[mid]==key Return mid. Else adjust low/high.
+
+// Shortest C Code[cite: 22, 23]
+#include &lt;stdio.h&gt;
+int linearSearch(int arr[], int n, int key) {
+    for(int i=0; i&lt;n; i++) if(arr[i] == key) return i;
+    return -1;
+}
+int binarySearch(int arr[], int n, int key) {
+    int low = 0, high = n-1;
+    while(low &lt;= high) {
+        int mid = (low + high) / 2;
+        if(arr[mid] == key) return mid;
+        if(key &lt; arr[mid]) high = mid - 1;
+        else low = mid + 1;
+    }
+    return -1;
+}</code></pre>
+    </details>
+
+    <details>
+        <summary>Practical 2: Bubble & Selection Sort</summary>
+        <p class="concept">Bubble Sort repeatedly compares and swaps adjacent elements, bubbling the largest to the end
+            (O(n^2), Stable)[cite: 24]. Selection Sort finds the minimum element from the unsorted portion and swaps it
+            directly into its correct position (O(n^2), Unstable)[cite: 24].</p>
+        <pre><code>// Algorithms[cite: 24]
+// Bubble: For i=0 to n-2: For j=0 to n-i-2: If arr[j]>arr[j+1] Swap
+// Selection: For i=0 to n-2: min_idx=i, For j=i+1 to n-1: If arr[j]&lt;arr[min_idx] min_idx=j. Swap.
+
+// Shortest C Code[cite: 24, 25]
+#include &lt;stdio.h&gt;
+void swap(int *a, int *b) { int t=*a; *a=*b; *b=t; }
+void bubbleSort(int arr[], int n) {
+    for(int i=0; i&lt;n-1; i++)
+        for(int j=0; j&lt;n-i-1; j++)
+            if(arr[j] &gt; arr[j+1]) swap(&amp;arr[j], &amp;arr[j+1]);
+}
+void selectionSort(int arr[], int n) {
+    for(int i=0; i&lt;n-1; i++) {
+        int min_idx = i;
+        for(int j=i+1; j&lt;n; j++)
+            if(arr[j] &lt; arr[min_idx]) min_idx = j;
+        swap(&amp;arr[i], &amp;arr[min_idx]);
+    }
+}</code></pre>
+    </details>
+
+    <details>
+        <summary>Practical 3: Hash Table</summary>
+        <p class="concept">Uses a hash function h1(k) = k mod m to map keys directly to array indices (O(1))[cite: 26].
+            Linear Probing checks the next sequential slot, while Double Hashing uses a second function as a jump step
+            to distribute elements evenly[cite: 26].</p>
+        <pre><code>// Shortest C Code[cite: 26, 27]
+#define SIZE 10
+int table[SIZE];
+void init() { for(int i=0; i&lt;SIZE; i++) table[i] = -1; }
+void insertLinear(int key) {
+    for(int i=0; i&lt;SIZE; i++) {
+        int probe = (key % SIZE + i) % SIZE;
+        if(table[probe] == -1) { table[probe] = key; return; }
+    }
+}
+void insertDoubleHash(int key) {
+    int step = 7 - (key % 7);
+    for(int i=0; i&lt;SIZE; i++) {
+        int probe = (key % SIZE + i * step) % SIZE;
+        if(table[probe] == -1) { table[probe] = key; return; }
+    }
+}</code></pre>
+    </details>
+
+    <details>
+        <summary>Practical 4: Singly Linked List</summary>
+        <p class="concept">Manage Pinnacle Club members. Insert President at beginning, Secretary at end, and delete
+            members[cite: 32].</p>
+        <pre><code>// C Code[cite: 32, 33]
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+typedef struct Node { int prn; char name[50]; struct Node* next; } Node;
+Node* createNode(int prn, const char* name) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode-&gt;prn = prn; strcpy(newNode-&gt;name, name); newNode-&gt;next = NULL; return newNode;
+}
+Node* addPresident(Node* head, int prn, const char* name) {
+    Node* newNode = createNode(prn, name); newNode-&gt;next = head; return newNode;
+}
+Node* addSecretary(Node* head, int prn, const char* name) {
+    Node* newNode = createNode(prn, name);
+    if (head == NULL) return newNode;
+    Node* temp = head; while (temp-&gt;next != NULL) temp = temp-&gt;next;
+    temp-&gt;next = newNode; return head;
+}
+Node* deleteMember(Node* head, int prn) {
+    if (head == NULL) return NULL;
+    Node* temp = head; Node* prev = NULL;
+    while (temp != NULL &amp;&amp; temp-&gt;prn != prn) { prev = temp; temp = temp-&gt;next; }
+    if (temp == NULL) return head;
+    if (prev != NULL) prev-&gt;next = temp-&gt;next; else head = temp-&gt;next;
+    free(temp); return head;
+}</code></pre>
+    </details>
+
+    <details>
+        <summary>Practical 5: Circular Doubly Linked List</summary>
+        <p class="concept">Cinemax Theater Ticket Booking. Links seats circularly with previous and next pointers[cite:
+            34].</p>
+        <pre><code>// C Code[cite: 34, 35]
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#define ROWS 10
+#define SEATS 7
+typedef struct Seat { int seatNo; int isBooked; struct Seat *prev, *next; } Seat;
+Seat* headRow[ROWS];
+void initTheater() {
+    for (int r=0; r &lt; ROWS; r++) {
+        Seat *head = NULL, *tail = NULL;
+        for (int i=1; i &lt;= SEATS; i++) {
+            Seat* newSeat = (Seat*)malloc(sizeof(Seat));
+            newSeat-&gt;seatNo = i; newSeat-&gt;isBooked = 0;
+            if (head == NULL) { head = tail = newSeat; head-&gt;next = head-&gt;prev = head; }
+            else { tail-&gt;next = newSeat; newSeat-&gt;prev = tail; newSeat-&gt;next = head; head-&gt;prev = newSeat; tail = newSeat; }
+        }
+        headRow[r] = head;
+    }
+}
+void bookSeat(int row, int seatNum) {
+    Seat* temp = headRow[row - 1];
+    do {
+        if (temp-&gt;seatNo == seatNum) {
+            if(temp-&gt;isBooked) printf("Booked!\n");
+            else { temp-&gt;isBooked = 1; printf("Success.\n"); }
+            return;
+        }
+        temp = temp-&gt;next;
+    } while (temp != headRow[row - 1]);
+}</code></pre>
+    </details>
+
+    <details>
+        <summary>Practical 6: Stack Applications</summary>
+        <p class="concept">A Stack strictly follows Last-In-First-Out (LIFO)[cite: 28]. Conversion uses a character
+            stack based on operator precedence, evaluation pushes numbers and applies operations to popped pairs[cite:
+            28].</p>
+        <pre><code>// Shortest C Code[cite: 28, 29]
+#include &lt;ctype.h&gt;
+char cStack[100]; int cTop = -1;
+void pushC(char c) { cStack[++cTop] = c; }
+char popC() { return cStack[cTop--]; }
+int pre(char op) { return (op=='^')?3 : (op=='*' || op=='/')?2 : (op=='+' || op=='-')?1 : 0; }
+
+void infixToPostfix(char in[], char out[]) {
+    int k=0; cTop=-1;
+    for(int i=0; in[i]; i++) {
+        if(isalnum(in[i])) out[k++] = in[i];
+        else if(in[i]=='(') pushC('(');
+        else if(in[i]==')') { while(cStack[cTop] != '(') out[k++] = popC(); popC(); }
+        else {
+            while(cTop != -1 &amp;&amp; cStack[cTop] != '(' &amp;&amp; pre(in[i]) &lt;= pre(cStack[cTop]))
+                out[k++] = popC();
+            pushC(in[i]);
+        }
+    }
+    while(cTop != -1) out[k++] = popC();
+    out[k] = '\0';
+}</code></pre>
+    </details>
+
+    <details>
+        <summary>Practical 7: Circular Queue</summary>
+        <p class="concept">A Queue strictly follows First-In-First-Out (FIFO)[cite: 30]. Circular Queues wrap pointers
+            using modulo arithmetic to reuse freed space[cite: 30].</p>
+        <pre><code>// Shortest C Code[cite: 30, 31]
+#define MAX 5
+int Q[MAX], front = -1, rear = -1;
+void enqueue(int val) {
+    if((rear + 1) % MAX == front) return; // Full
+    if(front == -1) front = 0;
+    rear = (rear + 1) % MAX;
+    Q[rear] = val;
+}
+int dequeue() {
+    if(front == -1) return -1; // Empty
+    int val = Q[front];
+    if(front == rear) { front = -1; rear = -1; }
+    else front = (front + 1) % MAX;
+    return val;
+}</code></pre>
+    </details>
+
+    <details>
+        <summary>Practical 8: Binary Search Tree (BST)</summary>
+        <p class="concept">Recursive insertion handles left subtrees for smaller values and right subtrees for larger
+            ones[cite: 35]. Mirroring recursively swaps left and right pointers[cite: 35].</p>
+        <pre><code>// C Code[cite: 36, 37]
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+typedef struct BSTNode { int data; struct BSTNode *left, *right; } BSTNode;
+BSTNode* createNode(int value) {
+    BSTNode* newNode = (BSTNode*)malloc(sizeof(BSTNode));
+    newNode-&gt;data = value; newNode-&gt;left = newNode-&gt;right = NULL; return newNode;
+}
+BSTNode* insert(BSTNode* root, int value) {
+    if (root == NULL) return createNode(value);
+    if (value &lt; root-&gt;data) root-&gt;left = insert(root-&gt;left, value);
+    else if (value &gt; root-&gt;data) root-&gt;right = insert(root-&gt;right, value);
+    return root;
+}
+void mirrorTree(BSTNode* root) {
+    if (root == NULL) return;
+    mirrorTree(root-&gt;left); mirrorTree(root-&gt;right);
+    BSTNode* temp = root-&gt;left; root-&gt;left = root-&gt;right; root-&gt;right = temp;
+}</code></pre>
+    </details>
+
+    <details>
+        <summary>Practical 9: Graph (DFS)</summary>
+        <p class="concept">DFS traversal recursively visits unvisited neighbors to check graph connectivity[cite: 37].
+            If any node remains unvisited after a full pass from the root, it is disconnected[cite: 37].</p>
+        <pre><code>// C Code[cite: 37, 38]
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#define MAX_CITIES 20
+typedef struct FlightNode { int destIndex; int cost; struct FlightNode* next; } FlightNode;
+typedef struct { int numCities; FlightNode* adjList[MAX_CITIES]; } FlightGraph;
+int visited[MAX_CITIES];
+
+void DFS(FlightGraph* g, int u) {
+    visited[u] = 1;
+    FlightNode* temp = g-&gt;adjList[u];
+    while (temp != NULL) {
+        if (!visited[temp-&gt;destIndex]) DFS(g, temp-&gt;destIndex);
+        temp = temp-&gt;next;
+    }
+}
+int isConnected(FlightGraph* g) {
+    for (int i=0; i &lt; g-&gt;numCities; i++) visited[i] = 0;
+    DFS(g, 0); 
+    for (int i=0; i &lt; g-&gt;numCities; i++) if (!visited[i]) return 0;
+    return 1; 
+}</code></pre>
+    </details>
+</body>
+
+</html>
